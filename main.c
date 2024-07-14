@@ -10,7 +10,7 @@
 #define NUM 1
 #define SYM 2
 
-size_t get_string_length(char *s)
+int get_string_length(char *s)
 {
     size_t length = 0;
     while (s[length + 1] != '\0')
@@ -22,9 +22,15 @@ size_t get_string_length(char *s)
 
 int int_from_string(char *s)
 {
-    size_t length = get_string_length(s);
-    // TODO: return the correct value
-    return -1;
+    int length = get_string_length(s);
+    int val = 0;
+    int factor = 1;
+    while (length >= 0)
+    {
+        val += (s[length--] - '0') * factor;
+        factor *= 10;
+    }
+    return val;
 }
 
 int get_input_num(char *s)
@@ -52,7 +58,7 @@ int get_input_num(char *s)
 
             }
     user_in[i] = '\0';
-    printf("user_in: %s\n", user_in);
+    printf("user_in: %d\n", int_from_string(user_in));
     return 1;
 }
 
