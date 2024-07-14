@@ -2,17 +2,24 @@
 #include <stdlib.h>
 #include <time.h>
 
+// TODO: make it easier to read
+
 #define BUFFER_SIZE 8
-#define PASSWORD_LENGTH 10
 #define TYPES 4
-#define UPPER 1
-#define LOWER 6
-#define NUM 1
-#define SYM 2
+
+int sum(unsigned *nums, int length)
+{
+    int total = 0;
+    for (int i = 0; i < length; i++)
+    {
+        total += nums[i];
+    }
+    return total;
+}
 
 int get_string_length(char *s)
 {
-    size_t length = 0;
+    int length = 0;
     while (s[length + 1] != '\0')
     {
         length++;
@@ -40,7 +47,7 @@ int get_input_num(char *s)
     int i;
     goto first_attempt;
     start_input:
-        c = getchar(); // on failure to provide numeric char getchar clears previous newline from buffer
+        c = getchar(); // on failure to provide numeric char, getchar clears previous newline from buffer
         first_attempt:
             i = 0;
             printf("%s", s);
@@ -58,8 +65,7 @@ int get_input_num(char *s)
 
             }
     user_in[i] = '\0';
-    printf("user_in: %d\n", int_from_string(user_in));
-    return 1;
+    return int_from_string(user_in);
 }
 
 
@@ -81,33 +87,40 @@ void number()
     putchar(temp + '0');
 }
 
+// TODO: refactor use more widely accepted symbols
 void symbol()
 {
-    int temp = rand() % ('$' - '!' + 1);
-    putchar(temp + '!');
+    char symbols[] = "!@#$%*-_";
+    putchar(symbols[rand() % 8]);
 }
 
-void get_counts(unsigned counts[TYPES])
+void get_counts(unsigned counts[TYPES], char *requests[TYPES])
 {
-    char *user_in[BUFFER_SIZE];
-    char c;
-    int i = 0;
-
-    printf("Welcome to Ray's Cool Password Generator!\n");
-    // call get_input_num next
-
+    for (int i = 0; i < TYPES; i++)
+    {
+        counts[i] = get_input_num(requests[i]);
+    }
 }
 
 int main()
 {
-    int length = 0;
+    int password_length; // length of final password
+    int i = 0;
     int tries = 0; // for testing and optimizing
-    unsigned counts[TYPES] = { LOWER, SYM, NUM, UPPER };
-    void (*functions[TYPES])() = {  &lowercase, &symbol, &number, &uppercase };
+    unsigned counts[TYPES];
+    void (*functions[TYPES])() = {  &symbol, &number, &uppercase, &lowercase };
+    char *count_requests[] = {
+        "Enter the number of special characters: ",
+        "Enter the number of numbers: ",
+        "Enter the number of uppercase letters: ",
+        "Enter the number of lowercase letters: "
+    };
     srand((unsigned) time(NULL));
-    get_input_num("enter a number: ");
+
+    get_counts(counts, count_requests);
+    password_length = sum(counts, TYPES);
     
-    while (length < PASSWORD_LENGTH) 
+    while (i < password_length) 
     {
         tries++;
         int ind = (rand() % TYPES);
@@ -120,7 +133,7 @@ int main()
         {
             counts[ind]--;
             functions[ind]();
-            length++;
+            i++;
         }
     }
     printf("\nTries: %d", tries);
