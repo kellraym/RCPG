@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+// TODO: make it easier to read
+
 #define BUFFER_SIZE 8
 #define TYPES 4
 
@@ -88,8 +90,8 @@ void number()
 // TODO: refactor use more widely accepted symbols
 void symbol()
 {
-    int temp = rand() % ('$' - '!' + 1);
-    putchar(temp + '!');
+    char symbols[] = "!@#$%*-_";
+    putchar(symbols[rand() % 8]);
 }
 
 void get_counts(unsigned counts[TYPES], char *requests[TYPES])
