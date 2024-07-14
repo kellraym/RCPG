@@ -3,12 +3,7 @@
 #include <time.h>
 
 #define BUFFER_SIZE 8
-#define PASSWORD_LENGTH 10
 #define TYPES 4
-#define UPPER 1
-#define LOWER 6
-#define NUM 1
-#define SYM 2
 
 int sum(unsigned *nums, int length)
 {
